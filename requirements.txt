@@ -1,0 +1,3 @@
+keras==1.2.2
+keras-tqdm
+wget
