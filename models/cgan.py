@@ -28,7 +28,7 @@ class CGAN(object):
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
         self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128):
+    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None):
         """ Train CGAN:
             -
             - Train D to discriminate G results
@@ -39,7 +39,7 @@ class CGAN(object):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
                 # Get real and fake data + labels
-                X, y, label_onehot = self.mixed_data(bs//2, X_train)
+                X, y, label_onehot = self.mixed_data(bs//2, X_train, y_train)
                 # Train discriminator
                 dl.append(self.D.train_on_batch([X, label_onehot],y))
                 # Clip discriminator weights
@@ -56,12 +56,26 @@ class CGAN(object):
             self.m.save_weights('../models/CGAN_' + str(i) + '.h5')
         return dl,gl
 
-    def mixed_data(self, sz, X_train):
+    def pre_train(self, X_train, y_train):
+        """ Pre-train D for a couple of iterations
+        """
+        sz = X_train.shape[0]//200
+        # Random labels to condition on
+        permutations  = np.random.randint(0,X_train.shape[0],size=sz)[:sz]
+        random_labels = to_categorical(y_train[permutations[:sz]])
+        random_images = X_train[permutations[:sz]]
+        fake_pred = self.G.predict([z_noise(sz), random_labels])
+        # Train D for a couple of iterations
+        x1_D = np.concatenate([fake_pred, random_images])
+        x2_D = np.concatenate([random_labels, random_labels])
+        self.D.fit([x1_D, x2_D], [0]*sz + [1]*sz, batch_size=128, nb_epoch=1, verbose=2)
+
+    def mixed_data(self, sz, X_train, y_train):
         """ Generate fake and real data to train D. Both real and fake data
         are conditioned on a one-hot encoded vector c.
         """
         permutations = np.random.randint(0,N,size=sz)
-        real_images = X_train_w[permutations[:sz]]
+        real_images = X_train[permutations[:sz]]
         label_onehot = to_categorical(y_train[permutations[:sz]], 10)
         X = np.concatenate((real_images, self.G.predict([z_noise(sz),label_onehot])))
         label_onehot = np.concatenate((label_onehot, label_onehot))

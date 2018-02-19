@@ -22,7 +22,7 @@ class DCGAN(object):
         self.D.compile(Adam(1e-3), "binary_crossentropy")
         self.m.compile(Adam(1e-4), "binary_crossentropy")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128):
+    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None):
         """ Train DCGAN:
             - Train D to discriminate G results
             - Train G to fool D (D is frozen)
@@ -38,6 +38,13 @@ class DCGAN(object):
                 make_trainable(self.D, True) # Unfreeze D
             self.m.save_weights('../models/DCGAN_' + str(i) + '.h5')
         return dl,gl
+
+    def pre_train(self, X_train, y_train=None):
+        """ Pre-train D for a couple of iterations
+        """
+        sz = X_train.shape[0]//200
+        x1 = np.concatenate([np.random.permutation(X_train)[:sz], self.G.predict(z_noise(sz))])
+        self.D.fit(x1, [0]*sz + [1]*sz, batch_size=128, nb_epoch=1, verbose=2)
 
     def mixed_data(self, sz, X_train):
         """ Generate fake and real data to train D

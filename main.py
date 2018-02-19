@@ -60,9 +60,9 @@ def main(args=None):
 
     # Load MNIST Data
     if args.train:
-        # TODO Pretrain on a couple of iterations !!!!!
-        X_train, _, _, _, N = import_mnist(preprocess=model.preprocess)
-        model.train(X_train, nb_epoch=args.nb_epochs, nb_iter=X_train.shape[0])
+        model.pre_train(X_train, y_train) # Pre-train D for a couple of iterations
+        X_train, y_train, _, _, N = import_mnist(preprocess=model.preprocess)
+        model.train(X_train, nb_epoch=args.nb_epochs, nb_iter=X_train.shape[0], y_train=y_train)
 
     if args.visualize:
         model.visualize()

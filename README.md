@@ -45,8 +45,7 @@ Retraining: `python main.py --type CGAN`
 ### InfoGAN  
 The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architecture is to learn a smaller dimentional, disentangled representation of the images to be generated. To do so, we introduce a latent code c, that is concatenated with the noise vector z. When training, we then want to maximize the mutual information between the latent code c and the generated image G(z,c). In practice, we:
 - Feed c in G through an additional input layer
-- Create an auxiliary head Q that shares some of its weights with D
-- Add a loss term that aims at maximizing the mutual information I(c, G(z,c))   
+- Create an auxiliary head Q that shares some of its weights with D, and train it to maximize the mutual information I(c, G(z,c))   
 
 **TODO** -> Add picture + explanations  
 Running pretrained model: `python main.py --type InfoGAN --no-train --model weights/InfoGAN.h5`  
