@@ -1,14 +1,16 @@
 # GANs Implementations in Keras  
 
-Implementation of:  
+Keras implementation of:  
 - [Deep Convolutional GAN](https://arxiv.org/abs/1511.06434)  
 - [Wasserstein GAN](https://arxiv.org/abs/1701.07875)  
 - [Conditional GAN](https://arxiv.org/abs/1411.1784)  
 - [InfoGAN](https://arxiv.org/abs/1606.03657)  
 
+The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)
+
 ### Requirements:  
 
-You will need Keras 1.2.2 with a Tensorflow backend.  
+You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Tensorflow backend.  
 To install dependencies, run `pip install -r requirements.txt`  
 
 ### DCGAN  
