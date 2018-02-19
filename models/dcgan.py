@@ -23,7 +23,7 @@ class DCGAN(object):
         self.D.compile(Adam(1e-3), "binary_crossentropy")
         self.m.compile(Adam(1e-4), "binary_crossentropy")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None):
+    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None, save_path='../models/'):
         """ Train DCGAN:
             - Train D to discriminate G results
             - Train G to fool D (D is frozen)
@@ -37,7 +37,7 @@ class DCGAN(object):
                 make_trainable(self.D, False) # Freeze D
                 gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs]))) # Train G
                 make_trainable(self.D, True) # Unfreeze D
-            self.m.save_weights('../models/DCGAN_' + str(i) + '.h5')
+            self.m.save_weights(save_path +'DCGAN_' + str(i) + '.h5')
         return dl,gl
 
     def pre_train(self, X_train, y_train=None):

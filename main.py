@@ -27,6 +27,7 @@ def parse_args(args):
     parser.add_argument('--nb_epochs', type=int, default=10, help="Number of training epochs")
     parser.add_argument('--visualize', type=bool, default=True, help="Results visualization")
     parser.add_argument('--model', type=str, help="Pre-trained weights path")
+    parser.add_argument('--save_path', type=str, default='../models/',help="Pre-trained weights path")
     parser.add_argument('--gpu', type=int, help='GPU ID')
     parser.add_argument('--train', dest='train', action='store_true')
     parser.add_argument('--no-train', dest='train', action='store_false')
@@ -54,17 +55,24 @@ def main(args=None):
     elif(args.type=='InfoGAN'): # InfoGAN
         model = InfoGAN(args)
 
-    # Load pre-trained weights
     if args.model:
+        # Load pre-trained weights
         model.load_weights(args.model)
 
-    # Load MNIST Data
     if args.train:
+        # Load MNIST Data
         X_train, y_train, _, _, N = import_mnist(preprocess=model.preprocess)
-        model.pre_train(X_train, y_train) # Pre-train D for a couple of iterations
-        model.train(X_train, nb_epoch=args.nb_epochs, nb_iter=X_train.shape[0], y_train=y_train)
+        # Pre-train D for a couple of iterations
+        model.pre_train(X_train, y_train)
+        # Launch training
+        model.train(X_train,
+            nb_epoch=args.nb_epochs,
+            nb_iter=X_train.shape[0],
+            y_train=y_train,
+            save_path=args.save_path)
 
     if args.visualize:
+        # Visualization
         model.visualize()
 
 if __name__ == '__main__':

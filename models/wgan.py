@@ -23,7 +23,7 @@ class WGAN(object):
         self.D.compile(RMSprop(0.5e-4), "mean_squared_error")
         self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None):
+    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None, save_path='../models/'):
         """ Train WGAN:
             - Train D to discriminate fake from real
             - Clip D weights to [-0.01, 0.01]
@@ -48,7 +48,7 @@ class WGAN(object):
                 gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs])))
                 # Unfreeze D
                 make_trainable(self.D, True)
-            self.m.save_weights('../models/WGAN_' + str(i) + '.h5')
+            self.m.save_weights(save_path +'DCGAN_' + str(i) + '.h5')
         return dl,gl
 
     def pre_train(self, X_train, y_train=None):

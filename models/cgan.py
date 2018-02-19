@@ -29,7 +29,7 @@ class CGAN(object):
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
         self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None):
+    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
             -
             - Train D to discriminate G results
@@ -54,7 +54,7 @@ class CGAN(object):
                 gl.append(m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs])))
                 # Unfreeze discriminator
                 make_trainable(self.D, True)
-            self.m.save_weights('../models/CGAN_' + str(i) + '.h5')
+            self.m.save_weights(save_path +'DCGAN_' + str(i) + '.h5')
         return dl,gl
 
     def pre_train(self, X_train, y_train):
