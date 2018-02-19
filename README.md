@@ -16,6 +16,11 @@ You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Ten
 To install dependencies, run `pip install -r requirements.txt`  
 
 ### DCGAN  
+Deep Convolutional GANs was one of the first modifications made to the original GAN architecture to avoid mode collapsing. Theses improvements include:  
+- Replacing pooling with strided convolutions
+- Using Batch-Normalization in both G and D
+- Starting G with a single Fully-Connected layer, end D with a flattening layer. The rest should be Fully-Convolutional
+- Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
 **TODO** -> Add picture + explanations  
 Running pretrained model: `python main.py --type DCGAN --no-train --model weights/DCGAN.h5`  
