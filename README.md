@@ -12,6 +12,10 @@ The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)
 
 You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Tensorflow backend.  
 To install dependencies, run `pip install -r requirements.txt`  
+Command line help:
+```python
+python main.py -h
+```   
 
 ### DCGAN  
 [Deep Convolutional GANs](https://arxiv.org/abs/1511.06434) was one of the first modifications made to the original GAN architecture to avoid mode collapsing. Theses improvements include:  
