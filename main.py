@@ -7,6 +7,8 @@ import tensorflow as tf
 from utils.utils import import_mnist
 from models.dcgan import DCGAN
 from models.wgan import WGAN
+from models.cgan import CGAN
+
 #, wgan, cgan, infogan as DCGAN, WGAN, CGAN, InfoGAN
 
 def get_session():

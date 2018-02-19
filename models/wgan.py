@@ -13,7 +13,7 @@ class WGAN(object):
 
     def __init__(self, args):
         self.build_model()
-        self.preprocess = False
+        self.preprocess = True
 
     def build_model(self):
         self.G = self.generator()
@@ -24,22 +24,29 @@ class WGAN(object):
 
     def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128):
         """ Train WGAN:
-            - Train D to discriminate G results
-            - Train G to fool D (D is frozen)
+            - Train D to discriminate fake from real
+            - Clip D weights to [-0.01, 0.01]
+            - Train G to fool D
         """
         dl,gl=[],[] # Training history
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
-                X,y = self.mixed_data(bs//2, X_train) # Get real and fake data + labels
-                dl.append(self.D.train_on_batch(X,y)) # Train D
-                for l in self.D.layers: # Clip discriminator weights
+                # Get real and fake data + labels
+                X,y = self.mixed_data(bs//2, X_train)
+                # Train D
+                dl.append(self.D.train_on_batch(X,y))
+                # Clip discriminator weights
+                for l in self.D.layers:
                     weights = l.get_weights()
                     weights = [np.clip(w, -0.01, 0.01) for w in weights]
                     l.set_weights(weights)
-                make_trainable(self.D, False) # Freeze D
-                gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs]))) # Train G
-                make_trainable(self.D, True) # Unfreeze D
+                # Freeze D
+                make_trainable(self.D, False)
+                # Train G
+                gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs])))
+                # Unfreeze D
+                make_trainable(self.D, True)
             self.m.save_weights('../models/WGAN_' + str(i) + '.h5')
         return dl,gl
 

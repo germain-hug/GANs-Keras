@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from utils import z_noise, c_noise
+from keras.utils.np_utils import to_categorical
 import numpy as np
 
 
@@ -23,6 +24,7 @@ def plot_results_DCGAN(G):
         img = np.concatenate((img,col), axis=1)
     plot_large(img)
 
+
 def plot_results_WGAN(G):
     """ Plots 10x10 windows from WGAN generator
     """
@@ -33,6 +35,17 @@ def plot_results_WGAN(G):
         img = np.concatenate((img,col), axis=1)
     plot_large(img)
 
+def plot_results_CGAN(G):
+    """ Plots 10x10 windows from CGAN generator
+    """
+    labels = np.arange(0, 10)
+    img = np.zeros((10*28,1))
+    for i in range(10):
+        # Remap from tanh range [-1, 1] to image range [0, 255]
+        col = np.multiply(np.add(G.predict([z_noise(len(labels)), \
+            to_categorical(labels,10)]).reshape(10*28,28), 1.0), 255.0/2.0)
+        img = np.concatenate((img,col), axis=1)
+    plot_large(img)
 
 def plot_results_InfoGAN(G, c):
     """ Plots 10x10 windows from InfoGAN generator
