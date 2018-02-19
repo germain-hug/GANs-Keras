@@ -7,8 +7,6 @@ Keras implementation of:
 - [InfoGAN](https://arxiv.org/abs/1606.03657)  
 
 The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)  
-**TODO** -> Introduction
-
 
 ### Requirements:  
 
