@@ -1,3 +1,4 @@
+from __future__ import print_function
 from utils.utils import z_noise, make_trainable
 from utils.visualization import plot_results_WGAN
 from keras.models import Model, Sequential
@@ -53,9 +54,11 @@ class WGAN(object):
     def pre_train(self, X_train, y_train=None):
         """ Pre-train D for a couple of iterations
         """
+        print("Pre-training D for a couple of iterations...", end='')
         sz = X_train.shape[0]//200
         x1 = np.concatenate([np.random.permutation(X_train)[:sz], self.G.predict(z_noise(sz))])
         self.D.fit(x1, [0]*sz + [1]*sz, batch_size=128, nb_epoch=1, verbose=2)
+        print("done.")
 
     def mixed_data(self, sz, X_train):
         """ Generate fake and real data to train D

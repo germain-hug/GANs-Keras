@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 
 def z_noise(bs):
@@ -20,6 +21,7 @@ def pre_process(X):
 def import_mnist(preprocess=True):
     """ Import and pre-process mnist dataset
     """
+    print("Downloading MNIST data...", end='')
     from keras.datasets import mnist
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     X_train = X_train.reshape(X_train.shape[0], 28, 28, 1)
@@ -27,6 +29,7 @@ def import_mnist(preprocess=True):
     if(preprocess):
         X_train = pre_process(X_train)
         X_test  = pre_process(X_test)
+    print("done.")
     return X_train, y_train, X_test, y_test, X_train.shape[0]
 
 def make_trainable(net, val):

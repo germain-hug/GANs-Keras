@@ -1,3 +1,4 @@
+from __future__ import print_function
 from utils.utils import z_noise, make_trainable
 from utils.visualization import plot_results_CGAN
 from keras.models import Model
@@ -59,6 +60,7 @@ class CGAN(object):
     def pre_train(self, X_train, y_train):
         """ Pre-train D for a couple of iterations
         """
+        print("Pre-training D for a couple of iterations...", end='')
         sz = X_train.shape[0]//200
         # Random labels to condition on
         permutations  = np.random.randint(0,X_train.shape[0],size=sz)[:sz]
@@ -69,6 +71,7 @@ class CGAN(object):
         x1_D = np.concatenate([fake_pred, random_images])
         x2_D = np.concatenate([random_labels, random_labels])
         self.D.fit([x1_D, x2_D], [0]*sz + [1]*sz, batch_size=128, nb_epoch=1, verbose=2)
+        print("done.")
 
     def mixed_data(self, sz, X_train, y_train):
         """ Generate fake and real data to train D. Both real and fake data
