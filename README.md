@@ -12,7 +12,7 @@ The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)
 
 You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Tensorflow backend.  
 To install dependencies, run `pip install -r requirements.txt`  
-Command line help:
+For command line parameters explanations:
 ```python
 python main.py -h
 ```   
@@ -25,8 +25,10 @@ python main.py -h
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
 **TODO** -> Add picture  
-Running pretrained model: `python main.py --type DCGAN --no-train --model weights/DCGAN.h5`  
-Retraining: `python main.py --type DCGAN`  
+```python
+python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
+python main.py --type DCGAN # Retraining
+```
 
 ### WGAN  
 Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/abs/1701.07875) aims at leveraging another distance metric between distribution to train G and D. More specifically, WGANs use the EM distance, which has the nice property of being continuous and differentiable for feed-forward networks. In practice, computing the EM distance is intractable, but we can approximate it by clipping the discriminator weights. The insures that D learns a K-Lipschitz function to compute the EM distance. Additionally, we:  
