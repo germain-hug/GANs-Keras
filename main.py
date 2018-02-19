@@ -29,8 +29,8 @@ def parse_args(args):
     parser.add_argument('--model', type=str, help="Pre-trained weights path")
     parser.add_argument('--save_path', type=str, default='../models/',help="Pre-trained weights path")
     parser.add_argument('--gpu', type=int, help='GPU ID')
-    parser.add_argument('--train', dest='train', action='store_true')
-    parser.add_argument('--no-train', dest='train', action='store_false')
+    parser.add_argument('--train', dest='train', action='store_true', help="Retrain model (default)")
+    parser.add_argument('--no-train', dest='train', action='store_false', help="Test model")
     parser.set_defaults(train=True)
     return parser.parse_args(args)
 
