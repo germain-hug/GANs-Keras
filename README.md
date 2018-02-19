@@ -22,11 +22,14 @@ Deep Convolutional GANs was one of the first modifications made to the original 
 - Starting G with a single Fully-Connected layer, end D with a flattening layer. The rest should be Fully-Convolutional
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
-**TODO** -> Add picture + explanations  
+**TODO** -> Add picture
 Running pretrained model: `python main.py --type DCGAN --no-train --model weights/DCGAN.h5`  
 Retraining: `python main.py --type DCGAN`  
 
 ### WGAN  
+Following up on the DCGAN architecture, the Wasserstein GAN aims at leveraging another distance metric between distribution to train G and D. More specifically, they use the EM distance, which has the nice property of being continuous and differentiable for feed-forward networks. In practice, computing the EM distance is intractable, but we can approximate it by clipping the discriminator weights. The insures that D learns a K-Lipschitz function to compute the EM distance. Additionally, we:  
+- Remove the sigmoid activation from D, leaving no constraint to its output range
+- Use RMSprop optimizer over Adam  
 
 **TODO** -> Add picture + explanations  
 Running pretrained model: `python main.py --type WGAN --no-train --model weights/WGAN.h5`  
