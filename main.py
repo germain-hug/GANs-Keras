@@ -4,30 +4,32 @@ import keras
 import argparse
 import tensorflow as tf
 
-from utils import *
-from models import *
+from utils.utils import import_mnist
+from models.dcgan import DCGAN
+from models.wgan import WGAN
+#, wgan, cgan, infogan as DCGAN, WGAN, CGAN, InfoGAN
 
-"""
-Limit memory usage
-"""
 def get_session():
+    """ Limit session memory usage
+    """
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     return tf.Session(config=config)
 
-"""
-Parse arguments from command line input
-"""
+
 def parse_args(args):
+    """ Parse arguments from command line input
+    """
     parser     = argparse.ArgumentParser(description='Training and testing scripts for various types of GAN Architectures')
     parser.add_argument('--type', type=str, default='DCGAN',  help='Choose from {DCGAN, WGAN, CGAN, InfoGAN}')
     parser.add_argument('--nb_epochs', type=int, default=10, help="Number of training epochs")
-    parser.add_argument('--visualization', type=bool, default=True, help="Results visualization")
-    parser.add_argument('--train', type=bool, default=True, help="Training or testing")
-    parser.add_argument('--model', type=str, default=True, help="Pre-trained weights path")
+    parser.add_argument('--visualize', type=bool, default=True, help="Results visualization")
+    parser.add_argument('--model', type=str, help="Pre-trained weights path")
     parser.add_argument('--gpu', type=int, help='GPU ID')
+    parser.add_argument('--train', dest='train', action='store_true')
+    parser.add_argument('--no-train', dest='train', action='store_false')
+    parser.set_defaults(train=True)
     return parser.parse_args(args)
-
 
 def main(args=None):
     # Parse arguments
@@ -50,12 +52,18 @@ def main(args=None):
     elif(args.type=='InfoGAN'): # InfoGAN
         model = InfoGAN(args)
 
+    # Load pre-trained weights
+    if args.model:
+        model.load_weights(args.model)
+
     # Load MNIST Data
-    if arg.train:
-        X_train, _, _, _ = import_mnist(preprocess=False)
-        model.train(X_train, nb_epoch=args.nb_epochs)
-    else:
-        pass # TODO Load weights
+    if args.train:
+        # TODO Pretrain on a couple of iterations !!!!!
+        X_train, _, _, _, N = import_mnist(preprocess=model.preprocess)
+        model.train(X_train, nb_epoch=args.nb_epochs, nb_iter=X_train.shape[0])
+
+    if args.visualize:
+        model.visualize()
 
 if __name__ == '__main__':
     main()
