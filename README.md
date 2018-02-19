@@ -36,8 +36,10 @@ Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/
 - Use RMSprop optimizer over Adam  
 
 **TODO** -> Add picture + explanations  
-Running pretrained model: `python main.py --type WGAN --no-train --model weights/WGAN.h5`  
-Retraining: `python main.py --type WGAN`  
+```shell
+python main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
+python main.py --type WGAN # Retraining
+```  
 
 ### cGAN  
 [Conditional GANs](https://arxiv.org/abs/1411.1784) are a variant to classic GANs, that allow one to condition both G and D on an auxiliary input y. We do so simply feeding y through an additional input layer to both G and D. In practice we have it go through an initial FC layer. This allows us to have two variables when generating new images:
@@ -45,8 +47,10 @@ Retraining: `python main.py --type WGAN`
 - The conditional label y  
 
 **TODO** -> Add picture + explanations  
-Running pretrained model: `python main.py --type CGAN --no-train --model weights/cGAN.h5`  
-Retraining: `python main.py --type CGAN`  
+```shell
+python main.py --type CGAN --no-train --model weights/CGAN.h5 # Running pretrained model
+python main.py --type CGAN # Retraining
+```  
 
 ### InfoGAN  
 The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architecture is to learn a smaller dimentional, disentangled representation of the images to be generated. To do so, we introduce a latent code c, that is concatenated with the noise vector z. When training, we then want to maximize the mutual information between the latent code c and the generated image G(z,c). In practice, we:
@@ -54,5 +58,7 @@ The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architectu
 - Create an auxiliary head Q that shares some of its weights with D, and train it to maximize the mutual information I(c, G(z,c))   
 
 **TODO** -> Add picture + explanations  
-Running pretrained model: `python main.py --type InfoGAN --no-train --model weights/InfoGAN.h5`  
-Retraining: `python main.py --type InfoGAN`  
+```shell
+python main.py --type InfoGAN --no-train --model weights/InfoGAN.h5 # Running pretrained model
+python main.py --type InfoGAN # Retraining
+```   
