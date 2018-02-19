@@ -13,7 +13,7 @@ The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)
 You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Tensorflow backend.  
 To install dependencies, run `pip install -r requirements.txt`  
 For command line parameters explanations:
-```python
+```shell
 python main.py -h
 ```   
 
@@ -25,7 +25,7 @@ python main.py -h
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
 **TODO** -> Add picture  
-```python
+```shell
 python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
 python main.py --type DCGAN # Retraining
 ```
