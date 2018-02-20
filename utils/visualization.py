@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from utils import z_noise, c_noise
+from utils.utils import z_noise, c_noise
 from keras.utils.np_utils import to_categorical
 import numpy as np
 
