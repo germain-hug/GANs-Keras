@@ -1,3 +1,5 @@
 keras==1.2.2
 keras-tqdm
 tensorflow-gpu
+matplotlib
+h5py
