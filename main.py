@@ -67,9 +67,9 @@ def main(args=None):
         model.pre_train(X_train, y_train)
         # Launch training
         model.train(X_train,
-            bs=batch_size,
+            bs=args.batch_size,
             nb_epoch=args.nb_epochs,
-            nb_iter=X_train.shape[0]//batch_size,
+            nb_iter=X_train.shape[0]//args.batch_size,
             y_train=y_train,
             save_path=args.save_path)
 
