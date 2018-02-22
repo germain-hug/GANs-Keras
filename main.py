@@ -27,7 +27,7 @@ def parse_args(args):
     parser.add_argument('--nb_epochs', type=int, default=10, help="Number of training epochs")
     parser.add_argument('--visualize', type=bool, default=True, help="Results visualization")
     parser.add_argument('--model', type=str, help="Pre-trained weights path")
-    parser.add_argument('--save_path', type=str, default='../models/',help="Pre-trained weights path")
+    parser.add_argument('--save_path', type=str, default='../weights/',help="Pre-trained weights path")
     parser.add_argument('--gpu', type=int, help='GPU ID')
     parser.add_argument('--train', dest='train', action='store_true', help="Retrain model (default)")
     parser.add_argument('--no-train', dest='train', action='store_false', help="Test model")
