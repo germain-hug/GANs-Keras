@@ -29,14 +29,13 @@ class WGAN(object):
             - Clip D weights to [-0.01, 0.01]
             - Train G to fool D
         """
-        dl,gl=[],[] # Training history
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
                 # Get real and fake data + labels
                 X,y = self.mixed_data(bs//2, X_train)
                 # Train D
-                dl.append(self.D.train_on_batch(X,y))
+                self.D.train_on_batch(X,y)
                 # Clip discriminator weights
                 for l in self.D.layers:
                     weights = l.get_weights()
@@ -45,11 +44,10 @@ class WGAN(object):
                 # Freeze D
                 make_trainable(self.D, False)
                 # Train G
-                gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs])))
+                self.m.train_on_batch(z_noise(bs), np.zeros([bs]))
                 # Unfreeze D
                 make_trainable(self.D, True)
-            self.m.save_weights(save_path +'DCGAN_' + str(i) + '.h5')
-        return dl,gl
+            self.m.save_weights(save_path +'WGAN_' + str(e) + '.h5')
 
     def pre_train(self, X_train, y_train=None):
         """ Pre-train D for a couple of iterations

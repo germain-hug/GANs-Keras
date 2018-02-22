@@ -15,8 +15,8 @@ def c_noise(sz):
 def pre_process(X):
     """ Go from [0,255] range to [-1,1] (to match tanh activation domain)
     """
-    X_train = np.divide(X_train.astype(np.float), 255.0/2.0)
-    return np.subtract(X_train, 1.0)
+    X = np.divide(X.astype(np.float), 255.0/2.0)
+    return np.subtract(X, 1.0)
 
 def import_mnist(preprocess=True):
     """ Import and pre-process mnist dataset

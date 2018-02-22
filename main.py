@@ -28,7 +28,7 @@ def parse_args(args):
     parser.add_argument('--batch_size', type=int, default=128, help="Batch size")
     parser.add_argument('--visualize', type=bool, default=True, help="Results visualization")
     parser.add_argument('--model', type=str, help="Pre-trained weights path")
-    parser.add_argument('--save_path', type=str, default='../weights/',help="Pre-trained weights path")
+    parser.add_argument('--save_path', type=str, default='weights/',help="Pre-trained weights path")
     parser.add_argument('--gpu', type=int, help='GPU ID')
     parser.add_argument('--train', dest='train', action='store_true', help="Retrain model (default)")
     parser.add_argument('--no-train', dest='train', action='store_false', help="Test model")

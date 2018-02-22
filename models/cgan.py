@@ -35,14 +35,13 @@ class CGAN(object):
             - Train D to discriminate G results
             - Train G to fool D (D is frozen)
         """
-        dl,gl=[],[] # Training history
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
                 # Get real and fake data + labels
                 X, y, label_onehot = self.mixed_data(bs//2, X_train, y_train)
                 # Train discriminator
-                dl.append(self.D.train_on_batch([X, label_onehot],y))
+                self.D.train_on_batch([X, label_onehot],y)
                 # Clip discriminator weights
                 for l in self.D.layers:
                     weights = l.get_weights()
@@ -51,11 +50,10 @@ class CGAN(object):
                 # Freeze discriminator
                 make_trainable(self.D, False)
                 # Train generator i.e. whole model (G + frozen D)
-                gl.append(m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs])))
+                m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs]))
                 # Unfreeze discriminator
                 make_trainable(self.D, True)
-            self.m.save_weights(save_path +'DCGAN_' + str(i) + '.h5')
-        return dl,gl
+            self.m.save_weights(save_path +'CGAN_' + str(e) + '.h5')
 
     def pre_train(self, X_train, y_train):
         """ Pre-train D for a couple of iterations

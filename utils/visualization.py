@@ -20,7 +20,7 @@ def plot_results_DCGAN(G):
     """
     img = np.zeros((10*28,1))
     for i in range(10):
-        col = G.predict(z_noise(10)).reshape(10*28,28)
+        col = np.multiply(np.add(G.predict(z_noise(10)).reshape(10*28,28), 1.0), 255.0/2.0)
         img = np.concatenate((img,col), axis=1)
     plot_large(img)
 

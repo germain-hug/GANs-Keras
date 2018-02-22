@@ -14,7 +14,7 @@ class DCGAN(object):
 
     def __init__(self, args):
         self.build_model()
-        self.preprocess = False
+        self.preprocess = True
 
     def build_model(self):
         self.G = self.generator()
@@ -28,17 +28,15 @@ class DCGAN(object):
             - Train D to discriminate G results
             - Train G to fool D (D is frozen)
         """
-        dl,gl=[],[] # Training history
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
                 X,y = self.mixed_data(bs//2, X_train) # Get real and fake data + labels
-                dl.append(self.D.train_on_batch(X,y)) # Train D
+                self.D.train_on_batch(X,y) # Train D
                 make_trainable(self.D, False) # Freeze D
-                gl.append(self.m.train_on_batch(z_noise(bs), np.zeros([bs]))) # Train G
+                self.m.train_on_batch(z_noise(bs), np.zeros([bs])) # Train G
                 make_trainable(self.D, True) # Unfreeze D
             self.m.save_weights(save_path +'DCGAN_' + str(e) + '.h5')
-        return dl,gl
 
     def pre_train(self, X_train, y_train=None):
         """ Pre-train D for a couple of iterations
@@ -71,7 +69,7 @@ class DCGAN(object):
             UpSampling2D(),
             Convolution2D(32, 3, 3, border_mode='same', activation=LeakyReLU()),
             BatchNormalization(mode=2),
-            Convolution2D(1, 1, 1, border_mode='same', activation='sigmoid')
+            Convolution2D(1, 1, 1, border_mode='same', activation='tanh')
         ])
 
     def discriminator(self):
