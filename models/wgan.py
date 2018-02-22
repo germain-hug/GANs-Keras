@@ -23,7 +23,7 @@ class WGAN(object):
         self.D.compile(RMSprop(0.5e-4), "mean_squared_error")
         self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None, save_path='../models/'):
+    def train(self, X_train, nb_epoch=10, nb_iter=450, bs=128, y_train=None, save_path='../models/'):
         """ Train WGAN:
             - Train D to discriminate fake from real
             - Clip D weights to [-0.01, 0.01]

@@ -29,7 +29,7 @@ class CGAN(object):
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
         self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
 
-    def train(self, X_train, nb_epoch=10, nb_iter=20000, bs=128, y_train=None, save_path='../models/'):
+    def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
             -
             - Train D to discriminate G results
