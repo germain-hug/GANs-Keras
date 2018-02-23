@@ -50,7 +50,7 @@ class CGAN(object):
                 # Freeze discriminator
                 make_trainable(self.D, False)
                 # Train generator i.e. whole model (G + frozen D)
-                m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs]))
+                self.m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs]))
                 # Unfreeze discriminator
                 make_trainable(self.D, True)
             self.m.save_weights(save_path +'CGAN_' + str(e) + '.h5')
@@ -75,7 +75,7 @@ class CGAN(object):
         """ Generate fake and real data to train D. Both real and fake data
         are conditioned on a one-hot encoded vector c.
         """
-        permutations = np.random.randint(0,N,size=sz)
+        permutations = np.random.randint(0,X_train.shape[0],size=sz)
         real_images = X_train[permutations[:sz]]
         label_onehot = to_categorical(y_train[permutations[:sz]], 10)
         X = np.concatenate((real_images, self.G.predict([z_noise(sz),label_onehot])))
