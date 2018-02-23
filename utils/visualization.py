@@ -15,22 +15,11 @@ def plot_large(img):
     plt.show()
 
 
-def plot_results_DCGAN(G):
-    """ Plots 10x10 windows from DCGAN generator
+def plot_results_GAN(G):
+    """ Plots 10x10 windows from DCGAN and WGAN generator
     """
     img = np.zeros((10*28,1))
     for i in range(10):
-        col = np.multiply(np.add(G.predict(z_noise(10)).reshape(10*28,28), 1.0), 255.0/2.0)
-        img = np.concatenate((img,col), axis=1)
-    plot_large(img)
-
-
-def plot_results_WGAN(G):
-    """ Plots 10x10 windows from WGAN generator
-    """
-    img = np.zeros((10*28,1))
-    for i in range(10):
-        # Remap from tanh range [-1, 1] to image range [0, 255]
         col = np.multiply(np.add(G.predict(z_noise(10)).reshape(10*28,28), 1.0), 255.0/2.0)
         img = np.concatenate((img,col), axis=1)
     plot_large(img)

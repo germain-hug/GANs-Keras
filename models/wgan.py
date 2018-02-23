@@ -98,4 +98,4 @@ class WGAN(object):
         self.m.load_weights(path)
 
     def visualize(self):
-        plot_results_WGAN(self.G)
+        plot_results_GAN(self.G)

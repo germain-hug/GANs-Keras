@@ -88,4 +88,4 @@ class DCGAN(object):
         self.m.load_weights(path)
 
     def visualize(self):
-        plot_results_DCGAN(self.G)
+        plot_results_GAN(self.G)

@@ -91,7 +91,7 @@ class CGAN(object):
 
         # Concatenate the units and feed to the shared branch
         x = merge([x_noise, x_label], mode='concat')
-        x = Dense(512*7*7, input_dim=110, activation=LeakyReLU())(x)
+        x = Dense(512*7*7, activation='relu')(x)
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
         x = UpSampling2D()(x)
