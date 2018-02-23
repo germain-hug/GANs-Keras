@@ -1,6 +1,6 @@
 from __future__ import print_function
 from utils.utils import z_noise, make_trainable
-from utils.visualization import plot_results_WGAN
+from utils.visualization import plot_results_GAN
 from keras.models import Model, Sequential
 from keras.layers import *
 from keras.optimizers import Adam, RMSprop
