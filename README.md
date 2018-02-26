@@ -4,7 +4,7 @@ Keras implementation of:
 - [Deep Convolutional GAN](https://arxiv.org/abs/1511.06434)  
 - [Wasserstein GAN](https://arxiv.org/abs/1701.07875)  
 - [Conditional GAN](https://arxiv.org/abs/1411.1784)  
-- [InfoGAN](https://arxiv.org/abs/1606.03657)  
+- [InfoGAN](https://arxiv.org/abs/1606.03657) **In progress** 
 
 The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)  
 
@@ -35,7 +35,7 @@ Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/
 - Remove the sigmoid activation from D, leaving no constraint to its output range
 - Use RMSprop optimizer over Adam  
 
-**TODO** -> Add picture  
+![wgan](https://github.com/germain-hug/GANs/raw/master/results/wgan.png "WGAN")
 ```shell
 python main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
 python main.py --type WGAN # Retraining
