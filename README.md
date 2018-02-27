@@ -48,7 +48,8 @@ python main.py --type WGAN # Retraining
 - The random noise vector z
 - The conditional label y  
 
-**TODO** -> Add picture  
+<div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/cgan.png" /></div>  
+
 ```shell
 python main.py --type CGAN --no-train --model weights/CGAN.h5 # Running pretrained model
 python main.py --type CGAN # Retraining

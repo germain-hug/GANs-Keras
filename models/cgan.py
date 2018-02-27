@@ -31,9 +31,8 @@ class CGAN(object):
 
     def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
-            -
-            - Train D to discriminate G results
-            - Train G to fool D (D is frozen)
+            - Train D to discriminate G results, conditioned on label
+            - Train G to fool D, conditioned on label
         """
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
@@ -119,20 +118,6 @@ class CGAN(object):
 
         # Assemble the model
         return Model([input_D, conditioning_label], output_D)
-
-    def pretrain(self, X_train, y_train):
-        """ Pre-train D for a couple of iterations, to avoid mode collapsing
-        """
-        sz = N//200
-        # Random labels to condition on
-        permutations  = np.random.randint(0,N,size=sz)[:sz]
-        random_labels = to_categorical(y_train[permutations[:sz]])
-        random_images = X_train_w[permutations[:sz]]
-        fake_pred = self.D.predict([z_noise(sz), random_labels])
-        # Train D for a couple of iterations
-        x1_D = np.concatenate([fake_pred, random_images])
-        x2_D = np.concatenate([random_labels, random_labels])
-        self.D.fit([x1_D, x2_D], [0]*sz + [1]*sz, batch_size=128, nb_epoch=1, verbose=2)
 
     def load_weights(self,path):
         self.m.load_weights(path)
