@@ -7,7 +7,7 @@ import numpy as np
 def plot_large(img):
     """ Custom sized image
     """
-    fig1 = plt.figure(figsize = (5,5))
+    fig1 = plt.figure(figsize = (3,3))
     ax1 = fig1.add_subplot(1,1,1)
     ax1.axes.get_xaxis().set_visible(False)
     ax1.axes.get_yaxis().set_visible(False)
