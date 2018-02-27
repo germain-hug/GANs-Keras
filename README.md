@@ -24,7 +24,7 @@ python main.py -h
 - Starting G with a single Fully-Connected layer, end D with a flattening layer. The rest should be Fully-Convolutional
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
-<div style="text-align:center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
+<div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
 
 ```shell
 python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
@@ -36,7 +36,7 @@ Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/
 - Remove the sigmoid activation from D, leaving no constraint to its output range
 - Use RMSprop optimizer over Adam  
 
-<div style="text-align:center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/wgan.png" /></div>  
+<div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/wgan.png" /></div>  
 
 ```shell
 python main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
