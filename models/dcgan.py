@@ -36,7 +36,7 @@ class DCGAN(object):
                 make_trainable(self.D, False) # Freeze D
                 self.m.train_on_batch(z_noise(bs), np.zeros([bs])) # Train G
                 make_trainable(self.D, True) # Unfreeze D
-            self.m.save_weights(save_path +'DCGAN_' + str(e) + '.h5')
+            self.m.save_weights(save_path +'DCGAN_' + str(e+1) + '.h5')
 
     def pre_train(self, X_train, y_train=None):
         """ Pre-train D for a couple of iterations

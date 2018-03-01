@@ -1,5 +1,5 @@
 from __future__ import print_function
-from utils.utils import z_noise, make_trainable
+from utils.utils import z_noise, c_noise, make_trainable
 from utils.visualization import plot_results_CGAN
 from keras.models import Model
 from keras.layers import *
@@ -49,10 +49,10 @@ class CGAN(object):
                 # Freeze discriminator
                 make_trainable(self.D, False)
                 # Train generator i.e. whole model (G + frozen D)
-                self.m.train_on_batch([z_noise(bs), label_onehot], np.zeros([bs]))
+                self.m.train_on_batch([z_noise(bs), c_noise(bs)], np.zeros([bs]))
                 # Unfreeze discriminator
                 make_trainable(self.D, True)
-            self.m.save_weights(save_path +'CGAN_' + str(e) + '.h5')
+            self.m.save_weights(save_path +'CGAN_' + str(e+1) + '.h5')
 
     def pre_train(self, X_train, y_train):
         """ Pre-train D for a couple of iterations
@@ -75,7 +75,7 @@ class CGAN(object):
         are conditioned on a one-hot encoded vector c.
         """
         permutations = np.random.randint(0,X_train.shape[0],size=sz)
-        real_images = X_train[permutations[:sz]]
+        real_images  = X_train[permutations[:sz]]
         label_onehot = to_categorical(y_train[permutations[:sz]], 10)
         X = np.concatenate((real_images, self.G.predict([z_noise(sz),label_onehot])))
         label_onehot = np.concatenate((label_onehot, label_onehot))
@@ -89,7 +89,7 @@ class CGAN(object):
         x_label = Dense(256, input_dim=10)(conditioning_label)
 
         # Concatenate the units and feed to the shared branch
-        x = merge([x_noise, x_label], mode='concat')
+        x = merge([x_noise, x_label], mode='concat', )
         x = Dense(512*7*7, activation='relu')(x)
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)

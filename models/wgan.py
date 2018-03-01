@@ -47,7 +47,7 @@ class WGAN(object):
                 self.m.train_on_batch(z_noise(bs), np.zeros([bs]))
                 # Unfreeze D
                 make_trainable(self.D, True)
-            self.m.save_weights(save_path +'WGAN_' + str(e) + '.h5')
+            self.m.save_weights(save_path +'WGAN_' + str(e+1) + '.h5')
 
     def pre_train(self, X_train, y_train=None):
         """ Pre-train D for a couple of iterations
@@ -75,9 +75,11 @@ class WGAN(object):
             BatchNormalization(mode=2),
             Reshape((7, 7, 512)),
             UpSampling2D(),
-            Convolution2D(64, 3, 3, border_mode='same', activation='relu'),
+            Convolution2D(64, 5, 5, border_mode='same', activation='relu'),
             BatchNormalization(mode=2),
             UpSampling2D(),
+            Convolution2D(64, 3, 3, border_mode='same', activation='relu'),
+            BatchNormalization(mode=2),
             Convolution2D(32, 3, 3, border_mode='same', activation='relu'),
             BatchNormalization(mode=2),
             Convolution2D(1, 1, 1, border_mode='same', activation='tanh')
@@ -87,8 +89,8 @@ class WGAN(object):
         """ WGAN Discriminator, small neural network with upsampling
         """
         return Sequential([
-            Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28, 28, 1), activation=LeakyReLU()),
-            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
+            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28, 28, 1), activation=LeakyReLU()),
+            Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
             Flatten(),
             Dense(256, activation=LeakyReLU()),
             Dense(1, activation = None)
