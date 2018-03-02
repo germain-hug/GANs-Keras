@@ -1,5 +1,5 @@
 from __future__ import print_function
-from utils.utils import z_noise, c_noise, make_trainable
+from utils.utils import z_noise, c_noise, make_trainable, ups_conv_bn
 from utils.visualization import plot_results_CGAN
 from keras.models import Model
 from keras.layers import *
@@ -94,11 +94,9 @@ class CGAN(object):
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
         x = UpSampling2D()(x)
-        x = Convolution2D(64, 3, 3, border_mode='same', activation='relu')(x)
-        x = BatchNormalization(mode=2)(x)
-        x = UpSampling2D()(x)
-        x = Convolution2D(32, 3, 3, border_mode='same', activation='relu')(x)
-        x = BatchNormalization(mode=2)(x)
+        # Two UpSampling - Conv2D - BatchNorm blocks
+        x = ups_conv_bn(x, 64, 'relu')
+        x = ups_conv_bn(x, 32, 'relu')
         self.output_G = Convolution2D(1, 1, 1, border_mode='same', activation='tanh')(x)
 
         # Assemble the model

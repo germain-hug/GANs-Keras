@@ -1,4 +1,5 @@
 from __future__ import print_function
+from keras.layers import UpSampling2D, Convolution2D, BatchNormalization
 import numpy as np
 
 def z_noise(bs):
@@ -37,3 +38,8 @@ def make_trainable(net, val):
     """
     net.trainable = val
     for l in net.layers: l.trainable = val
+
+def ups_conv_bn(x, dim, act):
+    x = UpSampling2D()(x)
+    x = Convolution2D(dim, 3, 3, border_mode='same', activation=act)(x)
+    return BatchNormalization(mode=2)(x)

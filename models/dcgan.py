@@ -76,8 +76,7 @@ class DCGAN(object):
         """ DCGAN Discriminator, small neural network with upsampling
         """
         return Sequential([
-            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same',
-            input_shape=(28, 28, 1), activation=LeakyReLU()),
+            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28, 28, 1), activation=LeakyReLU()),
             Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
             Flatten(),
             Dense(256, activation=LeakyReLU()),
