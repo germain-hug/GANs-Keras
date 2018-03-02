@@ -27,7 +27,7 @@ class CGAN(object):
         self.D = self.discriminator(self.input_D, self.conditioning_label)
         self.D.compile(RMSprop(0.5e-4), "mean_squared_error")
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
-        self.m.compile(RMSprop(0.5e-5), "mean_squared_error")
+        self.m.compile(RMSprop(0.5e-5), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
@@ -38,9 +38,9 @@ class CGAN(object):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
                 # Get real and fake data + labels
-                X, y, label_onehot = self.mixed_data(bs//2, X_train, y_train)
+                X, y, labels = self.mixed_data(bs//2, X_train, y_train)
                 # Train discriminator
-                self.D.train_on_batch([X, label_onehot],y)
+                self.D.train_on_batch([X, labels],y)
                 # Clip discriminator weights
                 for l in self.D.layers:
                     weights = l.get_weights()
@@ -76,20 +76,20 @@ class CGAN(object):
         """
         permutations = np.random.randint(0,X_train.shape[0],size=sz)
         real_images  = X_train[permutations[:sz]]
-        label_onehot = to_categorical(y_train[permutations[:sz]], 10)
-        X = np.concatenate((real_images, self.G.predict([z_noise(sz),label_onehot])))
-        label_onehot = np.concatenate((label_onehot, label_onehot))
-        return X, [0]*sz + [1]*sz, label_onehot
+        labels = to_categorical(y_train[permutations[:sz]], 10)
+        X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels])))
+        labels = np.concatenate((labels, labels))
+        return X, [0]*sz + [1]*sz, labels
 
     def generator(self, input_G, conditioning_label):
         """ CGAN Generator, small neural network with upsampling and LeakyReLU()
         """
-        # Feed each input into a maxout unit
-        x_noise = Dense(256, input_dim=100)(input_G)
-        x_label = Dense(256, input_dim=10)(conditioning_label)
+        # Feed conditioning input into a Dense unit
+        x_noise = Dense(128)(input_G)
+        x_label = Dense(128)(conditioning_label)
 
         # Concatenate the units and feed to the shared branch
-        x = merge([x_noise, x_label], mode='concat', )
+        x = merge([x_noise, x_label], mode='concat')
         x = Dense(512*7*7, activation='relu')(x)
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
