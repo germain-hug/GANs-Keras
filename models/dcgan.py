@@ -21,8 +21,8 @@ class DCGAN(GAN):
         self.G = self.generator()
         self.D = self.discriminator()
         self.m = Sequential([self.G, self.D])
-        self.D.compile(Adam(self.lr), "binary_crossentropy")
-        self.m.compile(Adam(self.lr), "binary_crossentropy")
+        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
+        self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=450, bs=128, y_train=None, save_path='../models/'):
         """ Train DCGAN:
@@ -61,14 +61,14 @@ class DCGAN(GAN):
         """ DCGAN Generator, small neural network with upsampling and LeakyReLU()
         """
         return Sequential([
-            Dense(512*7*7, input_dim=self.noise_dim, activation=LeakyReLU()),
+            Dense(512*7*7, input_dim=self.noise_dim, activation='relu'),
             BatchNormalization(mode=2),
             Reshape((7, 7, 512)),
             UpSampling2D(),
-            Convolution2D(64, 3, 3, border_mode='same', activation=LeakyReLU()),
+            Convolution2D(64, 3, 3, border_mode='same', activation='relu'),
             BatchNormalization(mode=2),
             UpSampling2D(),
-            Convolution2D(32, 3, 3, border_mode='same', activation=LeakyReLU()),
+            Convolution2D(32, 3, 3, border_mode='same', activation='relu'),
             BatchNormalization(mode=2),
             Convolution2D(1, 1, 1, border_mode='same', activation='tanh')
         ])
