@@ -61,7 +61,7 @@ def main(args=None):
 
     # Load MNIST Data, pre-train D for a couple of iterations and train model
     if args.train:
-        X_train, y_train, _, _, N = import_mnist(preprocess=model.preprocess)
+        X_train, y_train, _, _, N = import_mnist()
         model.pre_train(X_train, y_train)
         model.train(X_train,
             bs=args.batch_size,
