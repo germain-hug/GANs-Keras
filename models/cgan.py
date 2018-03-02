@@ -25,6 +25,7 @@ class CGAN(GAN):
         self.conditioning_label = Input(shape=(self.class_dim,))  # One-hot encoded label
         # Assemble CGAN Model using the functional API
         self.G = self.generator(self.input_G, self.conditioning_label)
+        self.G.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.D = self.discriminator(self.input_D, self.conditioning_label)
         self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
@@ -75,11 +76,10 @@ class CGAN(GAN):
         """ Generate fake and real data to train D. Both real and fake data
         are conditioned on a one-hot encoded vector c.
         """
-        permutations = np.random.randint(0,X_train.shape[0],size=sz)
+        permutations = np.random.randint(0,X_train.shape[0],size=2*sz)
         real_images  = X_train[permutations[:sz]]
-        labels = to_categorical(y_train[permutations[:sz]], 10)
-        X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels])))
-        labels = np.concatenate((labels, labels))
+        labels = to_categorical(y_train[permutations[:2*sz]], 10)
+        X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels[sz:]])))
         return X, [0]*sz + [1]*sz, labels
 
     def generator(self, input_G, conditioning_label):
@@ -94,12 +94,10 @@ class CGAN(GAN):
         x = Dense(512*7*7, activation='relu')(x)
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
-        x = UpSampling2D()(x)
-        # Two UpSampling - Conv2D - BatchNorm blocks
+        # 2 x (UpSampling + Conv2D + BatchNorm) blocks
         x = ups_conv_bn(x, 64, 'relu')
         x = ups_conv_bn(x, 32, 'relu')
         self.output_G = Convolution2D(1, 1, 1, border_mode='same', activation='tanh')(x)
-
         # Assemble the model
         return Model([input_G, conditioning_label], self.output_G)
 
@@ -111,7 +109,6 @@ class CGAN(GAN):
         x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(x)
         x = merge([x, conditioning_label], mode='concat')
-        x = Dense(512, activation=LeakyReLU())(x)
         x = Dense(256, activation=LeakyReLU())(x)
         output_D = Dense(1, activation = None)(x)
 
