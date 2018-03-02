@@ -12,6 +12,7 @@ import numpy as np
 
 class CGAN(GAN):
     """ Conditional GAN, as per https://arxiv.org/abs/1411.1784
+    We base our GAN architecture on a DCGAN model
     """
 
     def __init__(self, args):
@@ -25,10 +26,11 @@ class CGAN(GAN):
         self.conditioning_label = Input(shape=(self.class_dim,))  # One-hot encoded label
         # Assemble CGAN Model using the functional API
         self.G = self.generator(self.input_G, self.conditioning_label)
-        self.G.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.D = self.discriminator(self.input_D, self.conditioning_label)
-        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
+        # Compile models
+        self.G.compile(Adam(self.lr, 0.5), "binary_crossentropy")
+        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
@@ -43,11 +45,6 @@ class CGAN(GAN):
                 X, y, labels = self.mixed_data(bs//2, X_train, y_train)
                 # Train discriminator
                 self.D.train_on_batch([X, labels],y)
-                # Clip discriminator weights
-                for l in self.D.layers:
-                    weights = l.get_weights()
-                    weights = [np.clip(w, -0.01, 0.01) for w in weights]
-                    l.set_weights(weights)
                 # Freeze discriminator
                 make_trainable(self.D, False)
                 # Train generator i.e. whole model (G + frozen D)
@@ -95,8 +92,8 @@ class CGAN(GAN):
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
         # 2 x (UpSampling + Conv2D + BatchNorm) blocks
+        x = ups_conv_bn(x, 128, 'relu')
         x = ups_conv_bn(x, 64, 'relu')
-        x = ups_conv_bn(x, 32, 'relu')
         self.output_G = Convolution2D(1, 1, 1, border_mode='same', activation='tanh')(x)
         # Assemble the model
         return Model([input_G, conditioning_label], self.output_G)
@@ -105,12 +102,12 @@ class CGAN(GAN):
         """ CGAN Discriminator, small neural network with upsampling
         """
         # Concatenate the units and feed to the shared branch
-        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
-        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
+        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
+        x = Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(x)
         x = merge([x, conditioning_label], mode='concat')
         x = Dense(256, activation=LeakyReLU())(x)
-        output_D = Dense(1, activation = None)(x)
+        output_D = Dense(1, activation ='sigmoid')(x)
 
         # Assemble the model
         return Model([input_D, conditioning_label], output_D)
