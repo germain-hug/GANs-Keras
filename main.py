@@ -59,13 +59,13 @@ def main(args=None):
     if args.model:
         # Load pre-trained weights
         model.load_weights(args.model)
+    elif not args.train:
+        raise Exception('Please specify path to pretrained model')
 
+    # Load MNIST Data, pre-train D for a couple of iterations and train
     if args.train:
-        # Load MNIST Data
         X_train, y_train, _, _, N = import_mnist(preprocess=model.preprocess)
-        # Pre-train D for a couple of iterations
         model.pre_train(X_train, y_train)
-        # Launch training
         model.train(X_train,
             bs=args.batch_size,
             nb_epoch=args.nb_epochs,
@@ -74,7 +74,6 @@ def main(args=None):
             save_path=args.save_path)
 
     if args.visualize:
-        # Visualization
         model.visualize()
 
 if __name__ == '__main__':
