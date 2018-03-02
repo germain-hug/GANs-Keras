@@ -32,11 +32,16 @@ class DCGAN(GAN):
         for e in range(nb_epoch):
             print("Epoch " + str(e+1) + "/" + str(nb_epoch))
             for i in tqdm(range(nb_iter)):
-                X,y = self.mixed_data(bs//2, X_train) # Get real and fake data + labels
-                self.D.train_on_batch(X,y) # Train D
-                make_trainable(self.D, False) # Freeze D
-                self.m.train_on_batch(z_noise(bs), np.zeros([bs])) # Train G
-                make_trainable(self.D, True) # Unfreeze D
+                # Get real and fake data + labels
+                X,y = self.mixed_data(bs//2, X_train)
+                # Train D
+                self.D.train_on_batch(X,y)
+                # Freeze D
+                make_trainable(self.D, False)
+                # Train G
+                self.m.train_on_batch(z_noise(bs), np.zeros([bs]))
+                # Unfreeze D
+                make_trainable(self.D, True)
             self.m.save_weights(save_path +'DCGAN_' + str(e+1) + '.h5')
 
     def pre_train(self, X_train, y_train=None):

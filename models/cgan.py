@@ -102,8 +102,8 @@ class CGAN(GAN):
         """ CGAN Discriminator, small neural network with upsampling
         """
         # Concatenate the units and feed to the shared branch
-        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
-        x = Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
+        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
+        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(x)
         x = merge([x, conditioning_label], mode='concat')
         x = Dense(256, activation=LeakyReLU())(x)
