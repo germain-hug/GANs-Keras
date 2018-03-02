@@ -21,7 +21,7 @@ def parse_args(args):
     """
     parser = argparse.ArgumentParser(description='Training and testing scripts for various types of GAN Architectures')
     parser.add_argument('--type', type=str, default='DCGAN',  help='Choose from {DCGAN, WGAN, CGAN, InfoGAN}')
-    parser.add_argument('--nb_epochs', type=int, default=10, help="Number of training epochs")
+    parser.add_argument('--nb_epochs', type=int, default=100, help="Number of training epochs")
     parser.add_argument('--batch_size', type=int, default=128, help="Batch size")
     parser.add_argument('--visualize', type=bool, default=True, help="Results visualization")
     parser.add_argument('--model', type=str, help="Pre-trained weights path")
