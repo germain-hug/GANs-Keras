@@ -69,7 +69,7 @@ class WGAN(GAN):
         return X, [0]*sz + [1]*sz
 
     def generator(self):
-        """ WGAN Generator, small neural network with upsampling and LeakyReLU()
+        """ WGAN Generator, small neural network with upsampling and ReLU
         """
         return Sequential([
             Dense(512*7*7, input_dim=self.noise_dim, activation=LeakyReLU()),

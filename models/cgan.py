@@ -83,7 +83,7 @@ class CGAN(GAN):
         return X, [0]*sz + [1]*sz, labels
 
     def generator(self, input_G, conditioning_label):
-        """ CGAN Generator, small neural network with upsampling and LeakyReLU()
+        """ CGAN Generator, small neural network with upsampling and ReLU
         """
         # Feed conditioning input into a Dense unit
         x_noise = Dense(128)(input_G)

@@ -58,7 +58,7 @@ class DCGAN(GAN):
         return X, [0]*sz + [1]*sz
 
     def generator(self):
-        """ DCGAN Generator, small neural network with upsampling and LeakyReLU()
+        """ DCGAN Generator, small neural network with Upsampling and ReLU
         """
         return Sequential([
             Dense(512*7*7, input_dim=self.noise_dim, activation='relu'),
