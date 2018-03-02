@@ -16,7 +16,6 @@ def get_session():
     config.gpu_options.allow_growth = True
     return tf.Session(config=config)
 
-
 def parse_args(args):
     """ Parse arguments from command line input
     """

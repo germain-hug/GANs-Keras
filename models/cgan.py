@@ -23,7 +23,7 @@ class CGAN(GAN):
         self.input_G = Input(shape=(self.noise_dim,)) # Noise Vector
         self.input_D = Input(shape=self.img_shape) # Image Tensor
         self.conditioning_label = Input(shape=(self.class_dim,))  # One-hot encoded label
-        # Assemble CGAN Model using the **functional** API
+        # Assemble CGAN Model using the functional API
         self.G = self.generator(self.input_G, self.conditioning_label)
         self.D = self.discriminator(self.input_D, self.conditioning_label)
         self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
