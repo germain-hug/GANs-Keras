@@ -9,7 +9,6 @@ class GAN(object):
         self.noise_dim = 100
         self.class_dim = 10
         self.lr = 1e-4
-        self.preprocess = True
 
     def load_weights(self,path):
         self.m.load_weights(path)
