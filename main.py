@@ -9,8 +9,6 @@ from models.dcgan import DCGAN
 from models.wgan import WGAN
 from models.cgan import CGAN
 
-#, wgan, cgan, infogan as DCGAN, WGAN, CGAN, InfoGAN
-
 def get_session():
     """ Limit session memory usage
     """
@@ -22,7 +20,7 @@ def get_session():
 def parse_args(args):
     """ Parse arguments from command line input
     """
-    parser     = argparse.ArgumentParser(description='Training and testing scripts for various types of GAN Architectures')
+    parser = argparse.ArgumentParser(description='Training and testing scripts for various types of GAN Architectures')
     parser.add_argument('--type', type=str, default='DCGAN',  help='Choose from {DCGAN, WGAN, CGAN, InfoGAN}')
     parser.add_argument('--nb_epochs', type=int, default=10, help="Number of training epochs")
     parser.add_argument('--batch_size', type=int, default=128, help="Batch size")
@@ -56,13 +54,13 @@ def main(args=None):
     elif(args.type=='InfoGAN'): # InfoGAN
         model = InfoGAN(args)
 
+    # Load pre-trained weights
     if args.model:
-        # Load pre-trained weights
         model.load_weights(args.model)
     elif not args.train:
         raise Exception('Please specify path to pretrained model')
 
-    # Load MNIST Data, pre-train D for a couple of iterations and train
+    # Load MNIST Data, pre-train D for a couple of iterations and train model
     if args.train:
         X_train, y_train, _, _, N = import_mnist(preprocess=model.preprocess)
         model.pre_train(X_train, y_train)
@@ -73,6 +71,7 @@ def main(args=None):
             y_train=y_train,
             save_path=args.save_path)
 
+    # (Optional) Visualize results
     if args.visualize:
         model.visualize()
 

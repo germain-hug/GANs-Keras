@@ -5,29 +5,30 @@ from keras.models import Model
 from keras.layers import *
 from keras.optimizers import Adam, RMSprop
 from keras.utils.np_utils import to_categorical
+from models.gan import GAN
 from tqdm import tqdm
 
 import numpy as np
 
-class CGAN(object):
+class CGAN(GAN):
     """ Conditional GAN, as per https://arxiv.org/abs/1411.1784
     """
 
     def __init__(self, args):
+        GAN.__init__(self)
         self.build_model()
-        self.preprocess = True
 
     def build_model(self):
         # Input Tensors
-        self.input_G = Input(shape=(100,)) # Noise Vector
-        self.input_D = Input(shape=(28,28,1)) # Image Tensor
-        self.conditioning_label = Input(shape=(10,))  # One-hot encoded label
+        self.input_G = Input(shape=(self.noise_dim,)) # Noise Vector
+        self.input_D = Input(shape=self.img_shape) # Image Tensor
+        self.conditioning_label = Input(shape=(self.class_dim,))  # One-hot encoded label
         # Assemble CGAN Model using the **functional** API
         self.G = self.generator(self.input_G, self.conditioning_label)
         self.D = self.discriminator(self.input_D, self.conditioning_label)
-        self.D.compile(Adam(0.0002, 0.5), "binary_crossentropy")
+        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
-        self.m.compile(Adam(0.0002, 0.5), "binary_crossentropy")
+        self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
@@ -106,7 +107,7 @@ class CGAN(object):
         """ CGAN Discriminator, small neural network with upsampling
         """
         # Concatenate the units and feed to the shared branch
-        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28,28,1), activation=LeakyReLU())(input_D)
+        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
         x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(x)
         x = merge([x, conditioning_label], mode='concat')
@@ -116,9 +117,6 @@ class CGAN(object):
 
         # Assemble the model
         return Model([input_D, conditioning_label], output_D)
-
-    def load_weights(self,path):
-        self.m.load_weights(path)
 
     def visualize(self):
         plot_results_CGAN(self.G)

@@ -4,24 +4,25 @@ from utils.visualization import plot_results_GAN
 from keras.models import Model, Sequential
 from keras.layers import *
 from keras.optimizers import Adam, RMSprop
+from models.gan import GAN
 from tqdm import tqdm
 
 import numpy as np
 
-class DCGAN(object):
+class DCGAN(GAN):
     """ Deep Convolutional GAN, as per https://arxiv.org/abs/1511.06434
     """
 
     def __init__(self, args):
+        GAN.__init__(self)
         self.build_model()
-        self.preprocess = True
 
     def build_model(self):
         self.G = self.generator()
         self.D = self.discriminator()
         self.m = Sequential([self.G, self.D])
-        self.D.compile(Adam(1e-3), "binary_crossentropy")
-        self.m.compile(Adam(1e-4), "binary_crossentropy")
+        self.D.compile(Adam(self.lr), "binary_crossentropy")
+        self.m.compile(Adam(self.lr), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=450, bs=128, y_train=None, save_path='../models/'):
         """ Train DCGAN:
@@ -60,7 +61,7 @@ class DCGAN(object):
         """ DCGAN Generator, small neural network with upsampling and LeakyReLU()
         """
         return Sequential([
-            Dense(512*7*7, input_dim=100, activation=LeakyReLU()),
+            Dense(512*7*7, input_dim=self.noise_dim, activation=LeakyReLU()),
             BatchNormalization(mode=2),
             Reshape((7, 7, 512)),
             UpSampling2D(),
@@ -76,15 +77,9 @@ class DCGAN(object):
         """ DCGAN Discriminator, small neural network with upsampling
         """
         return Sequential([
-            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28, 28, 1), activation=LeakyReLU()),
+            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU()),
             Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
             Flatten(),
             Dense(256, activation=LeakyReLU()),
             Dense(1, activation = 'sigmoid')
         ])
-
-    def load_weights(self,path):
-        self.m.load_weights(path)
-
-    def visualize(self):
-        plot_results_GAN(self.G)
