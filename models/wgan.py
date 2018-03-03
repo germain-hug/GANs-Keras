@@ -3,7 +3,7 @@ from utils.utils import z_noise, make_trainable
 from utils.visualization import plot_results_GAN
 from keras.models import Model, Sequential
 from keras.layers import *
-from keras.optimizers import Adam, RMSprop
+from keras.optimizers import RMSprop
 from tqdm import tqdm
 from models.gan import GAN
 
