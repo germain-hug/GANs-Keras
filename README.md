@@ -24,7 +24,7 @@ python main.py -h
 - Starting G with a single Fully-Connected layer, end D with a flattening layer. The rest should be Fully-Convolutional
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
-<div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
+<div align="center"><img width="250" src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
 
 ```shell
 python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
@@ -56,7 +56,7 @@ python main.py --type CGAN # Retraining
 ```  
 
 ## InfoGAN  
-The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architecture is to learn a smaller dimentional, disentangled representation of the images to be generated. To do so, we introduce a latent code c, that is concatenated with the noise vector z. When training, we then want to maximize the mutual information between the latent code c and the generated image G(z,c). In practice, we:
+The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architecture is to learn a smaller dimensional, "disentangled" representation of the images to be generated. To do so, we introduce a latent code c, that is concatenated with the noise vector z. When training, we then want to maximize the mutual information between the latent code c and the generated image G(z,c). In practice, we:
 - Feed c in G through an additional input layer
 - Create an auxiliary head Q that shares some of its weights with D, and train it to maximize the mutual information I(c, G(z,c))   
 

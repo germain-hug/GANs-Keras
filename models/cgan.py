@@ -3,7 +3,7 @@ from utils.utils import z_noise, c_noise, make_trainable, ups_conv_bn
 from utils.visualization import plot_results_CGAN
 from keras.models import Model
 from keras.layers import *
-from keras.optimizers import Adam, RMSprop
+from keras.optimizers import Adam
 from keras.utils.np_utils import to_categorical
 from models.gan import GAN
 from tqdm import tqdm
@@ -29,8 +29,8 @@ class CGAN(GAN):
         self.D = self.discriminator(self.input_D, self.conditioning_label)
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
         # Compile models
-        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
-        self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
+        self.D.compile(Adam(10 * self.lr), "binary_crossentropy")
+        self.m.compile(Adam(self.lr), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=250, bs=128, y_train=None, save_path='../models/'):
         """ Train CGAN:
@@ -72,10 +72,11 @@ class CGAN(GAN):
         """ Generate fake and real data to train D. Both real and fake data
         are conditioned on a one-hot encoded vector c.
         """
-        permutations = np.random.randint(0,X_train.shape[0],size=2*sz)
+        permutations = np.random.randint(0,X_train.shape[0],size=sz)
         real_images  = X_train[permutations[:sz]]
-        labels = to_categorical(y_train[permutations[:2*sz]], 10)
-        X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels[sz:]])))
+        labels = to_categorical(y_train[permutations[:sz]], 10)
+        X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels])))
+        label = np.concatenate((labels, labels))
         return X, [0]*sz + [1]*sz, labels
 
     def generator(self, input_G, conditioning_label):

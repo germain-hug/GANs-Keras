@@ -8,6 +8,7 @@ from utils.utils import import_mnist
 from models.dcgan import DCGAN
 from models.wgan import WGAN
 from models.cgan import CGAN
+from models.infogan import InfoGAN
 
 def get_session():
     """ Limit session memory usage
