@@ -21,7 +21,7 @@ class WGAN(GAN):
         self.G = self.generator()
         self.D = self.discriminator()
         self.m = Sequential([self.G, self.D])
-        self.D.compile(RMSprop(0.05 * self.lr), "mean_squared_error")
+        self.D.compile(RMSprop(0.5 * self.lr), "mean_squared_error")
         self.m.compile(RMSprop(0.05 * self.lr), "mean_squared_error")
 
     def train(self, X_train, nb_epoch=10, nb_iter=450, bs=128, y_train=None, save_path='../models/'):
@@ -90,8 +90,8 @@ class WGAN(GAN):
         """ WGAN Discriminator, small neural network with upsampling
         """
         return Sequential([
-            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU()),
-            Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
+            Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU()),
+            Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU()),
             Flatten(),
             Dense(256, activation=LeakyReLU()),
             Dense(1, activation = None)

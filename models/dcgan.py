@@ -21,8 +21,8 @@ class DCGAN(GAN):
         self.G = self.generator()
         self.D = self.discriminator()
         self.m = Sequential([self.G, self.D])
-        self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
-        self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
+        self.D.compile(Adam(10 * self.lr), "binary_crossentropy")
+        self.m.compile(Adam(self.lr), "binary_crossentropy")
 
     def train(self, X_train, nb_epoch=10, nb_iter=450, bs=128, y_train=None, save_path='../models/'):
         """ Train DCGAN:

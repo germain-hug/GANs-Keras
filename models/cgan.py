@@ -29,7 +29,6 @@ class CGAN(GAN):
         self.D = self.discriminator(self.input_D, self.conditioning_label)
         self.m = Model([self.input_G, self.conditioning_label], self.D([self.output_G, self.conditioning_label]))
         # Compile models
-        self.G.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.D.compile(Adam(self.lr, 0.5), "binary_crossentropy")
         self.m.compile(Adam(self.lr, 0.5), "binary_crossentropy")
 
@@ -92,8 +91,8 @@ class CGAN(GAN):
         x = BatchNormalization(mode=2)(x)
         x = Reshape((7, 7, 512))(x)
         # 2 x (UpSampling + Conv2D + BatchNorm) blocks
-        x = ups_conv_bn(x, 128, 'relu')
         x = ups_conv_bn(x, 64, 'relu')
+        x = ups_conv_bn(x, 32, 'relu')
         self.output_G = Convolution2D(1, 1, 1, border_mode='same', activation='tanh')(x)
         # Assemble the model
         return Model([input_G, conditioning_label], self.output_G)
@@ -102,8 +101,8 @@ class CGAN(GAN):
         """ CGAN Discriminator, small neural network with upsampling
         """
         # Concatenate the units and feed to the shared branch
-        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
-        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
+        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=self.img_shape, activation=LeakyReLU())(input_D)
+        x = Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(x)
         x = merge([x, conditioning_label], mode='concat')
         x = Dense(256, activation=LeakyReLU())(x)
