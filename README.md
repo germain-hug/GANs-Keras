@@ -37,7 +37,7 @@ Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/
 - Remove the sigmoid activation from D, leaving no constraint to its output range
 - Use RMSprop optimizer over Adam  
 
-<div align="center"><img width="250" src ="https://github.com/germain-hug/GANs/raw/master/results/wgan.png" /></div>  
+<div align="center"><img width="240" src ="https://github.com/germain-hug/GANs/raw/master/results/wgan.png" /></div>  
 
 ```shell
 python main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
