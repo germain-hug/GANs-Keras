@@ -24,7 +24,7 @@ python main.py -h
 - Starting G with a single Fully-Connected layer, end D with a flattening layer. The rest should be Fully-Convolutional
 - Using LeakyReLU activations in D, ReLU in G, with the exception of the last layer of G which should be tanh  
 
-<div align="center"><img width="200" margin-top="20px" margin-bottom="20px" src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
+<div align="center"><img width="200" style="margin:20px;" src ="https://github.com/germain-hug/GANs/raw/master/results/dcgan.png" /></div>  
 
 ```shell
 python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
