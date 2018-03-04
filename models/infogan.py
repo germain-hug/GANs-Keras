@@ -60,7 +60,8 @@ class InfoGAN(GAN):
                 make_trainable(self.Q, True)
                 # Train Auxiliary Network
                 self.G_and_Q.train_on_batch([random_z, random_c], np.zeros([bs//2]))
-            self.m.save_weights(save_path +'InfoGAN_' + str(e+1) + '.h5')
+            self.G_and_Q.save_weights(save_path +'InfoGAN_Q' + str(e+1) + '.h5')
+            self.G_and_D.save_weights(save_path +'InfoGAN_D' + str(e+1) + '.h5')
 
     def pre_train(self, X_train, y_train):
         """ Pre-train D for a couple of iterations
@@ -90,8 +91,8 @@ class InfoGAN(GAN):
         """ InfoGAN Generator, small neural network with upsampling and ReLU
         """
         # Feed conditioning input into a Dense unit
-        x_noise = Dense(128)(input_G)
-        x_label = Dense(128)(conditioning_label)
+        x_noise = Dense(128, activation='relu')(input_G)
+        x_label = Dense(128, activation='relu')(conditioning_label)
 
         # Concatenate the units and feed to the shared branch
         x = merge([x_noise, x_label], mode='concat')
@@ -110,8 +111,8 @@ class InfoGAN(GAN):
         (nb: D is unconditional)
         """
         # Create a shared core for D and Q
-        x = Convolution2D(128, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28,28,1), activation=LeakyReLU())(input_D)
-        self.shared_D_Q = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
+        x = Convolution2D(256, 5, 5, subsample=(2,2), border_mode='same', input_shape=(28,28,1), activation=LeakyReLU())(input_D)
+        self.shared_D_Q = Convolution2D(512, 5, 5, subsample=(2,2), border_mode='same', activation=LeakyReLU())(x)
         x = Flatten()(self.shared_D_Q)
         x = Dense(256, activation=LeakyReLU())(x)
         output_D = Dense(1, activation = 'sigmoid')(x)
@@ -141,4 +142,8 @@ class InfoGAN(GAN):
         return loss
 
     def visualize(self):
-        plot_results_InfoGAN(self.G)
+        plot_results_InfoGAN(self.G, )
+
+    def load_weights(self,path):
+        self.G_and_D.load_weights(path)
+        self.G_and_Q.load_weights(path.replace('_D', '_Q'))

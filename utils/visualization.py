@@ -38,14 +38,18 @@ def plot_results_CGAN(G):
         img = np.concatenate((img,col), axis=1)
     plot_large(img)
 
-def plot_results_InfoGAN(G, c):
+def plot_results_InfoGAN(G):
     """ Plots 10x10 windows from InfoGAN generator
     """
+    upper = 1.0
+    lower = 0.0
+    latent_code =  np.arange(lower, upper, (upper-lower)/10.0)
+
     img = np.zeros((10*28,1))
     for i in range(10):
         x = np.zeros((10,10))
-        x[:,2] = c
+        x[:,2] = latent_code
         # Convert tanh range [-1; 1] to [0; 255]
-        col = np.multiply(np.add(G.predict([noise(10),x]).reshape(10*28,28), 1.0), 255.0/2.0)
+        col = np.multiply(np.add(G.predict([z_noise(10),x]).reshape(10*28,28), 1.0), 255.0/2.0)
         img = np.concatenate((col,img), axis=1)
     plot_large(img)
