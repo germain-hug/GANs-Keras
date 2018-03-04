@@ -15,7 +15,7 @@ def plot_large(img):
     plt.show()
 
 
-def plot_results_GAN(G,n=6):
+def plot_results_GAN(G,n=5):
     """ Plots n x n windows from DCGAN and WGAN generator
     """
     img = np.zeros((n * 28,1))
