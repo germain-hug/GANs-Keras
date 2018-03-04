@@ -76,15 +76,15 @@ class CGAN(GAN):
         real_images  = X_train[permutations[:sz]]
         labels = to_categorical(y_train[permutations[:sz]], 10)
         X = np.concatenate((real_images, self.G.predict([z_noise(sz),labels])))
-        label = np.concatenate((labels, labels))
+        labels = np.concatenate((labels, labels))
         return X, [0]*sz + [1]*sz, labels
 
     def generator(self, input_G, conditioning_label):
         """ CGAN Generator, small neural network with upsampling and ReLU
         """
         # Feed conditioning input into a Dense unit
-        x_noise = Dense(128)(input_G)
-        x_label = Dense(128)(conditioning_label)
+        x_noise = Dense(128, activation='relu')(input_G)
+        x_label = Dense(128, activation='relu')(conditioning_label)
 
         # Concatenate the units and feed to the shared branch
         x = merge([x_noise, x_label], mode='concat')

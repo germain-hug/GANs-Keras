@@ -28,6 +28,7 @@ def plot_results_CGAN(G):
     """ Plots n x n windows from CGAN generator
     """
     labels = np.arange(0, 10)
+    # labels = [1,4,9,5,8,6,2,0,3,7]
     n = len(labels)
     img = np.zeros((n * 28,1))
     for i in range(n):
