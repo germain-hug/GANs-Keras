@@ -41,17 +41,28 @@ def plot_results_CGAN(G):
 def plot_results_InfoGAN(G):
     """ Plots 10x10 windows from InfoGAN generator
     """
-    upper = 0.0
-    lower = 2.0
+    # Latent code
+    lower = 0.0
+    upper = 10.0
     latent_code =  np.arange(lower, upper, (upper-lower)/10.0)
-    latent_code = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    z = z_noise(10)
 
-    img = np.zeros((10*28,1))
+    # Fixed input
+    n_rows = 10
+    z = z_noise(n_rows)
+    img = np.zeros((n_rows*28,1))
+
     for i in range(10):
-        x = np.zeros((10,10))
-        x[i,:] = 1.0#latent_code
+        x = np.zeros((n_rows,10))
+        x[:,i] = latent_code
+        #print(x)
+        #x[:,0] = 1.0
+        # x[:,3] = 1.0
+        # x[:,2] = 1.0
+        # x[:,1] = 1.0
+        #x[:,0] = latent_code
+        print(x)
+
         # Convert tanh range [-1; 1] to [0; 255]
-        col = np.multiply(np.add(G.predict([z,x]).reshape(10*28,28), 1.0), 255.0/2.0)
+        col = np.multiply(np.add(G.predict([z,x]).reshape(n_rows*28,28), 1.0), 255.0/2.0)
         img = np.concatenate((col,img), axis=1)
     plot_large(img)
