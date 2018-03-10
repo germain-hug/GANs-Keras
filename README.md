@@ -14,7 +14,7 @@ You will need [Keras 1.2.2](https://pypi.python.org/pypi/Keras/1.2.2) with a Ten
 To install dependencies, run `pip install -r requirements.txt`  
 For command line parameters explanations:
 ```shell
-python main.py -h
+python3 main.py -h
 ```   
 
 ## DCGAN  
@@ -28,8 +28,8 @@ python main.py -h
 <br />  
 
 ```shell
-python main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
-python main.py --type DCGAN # Retraining
+python3 main.py --type DCGAN --no-train --model weights/DCGAN.h5 # Running pretrained model
+python3 main.py --type DCGAN # Retraining
 ```
 
 ## WGAN  
@@ -40,8 +40,8 @@ Following up on the DCGAN architecture, the [Wasserstein GAN](https://arxiv.org/
 <div align="center"><img width="240" src ="https://github.com/germain-hug/GANs/raw/master/results/wgan.png" /></div>  
 
 ```shell
-python main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
-python main.py --type WGAN # Retraining
+python3 main.py --type WGAN --no-train --model weights/WGAN.h5 # Running pretrained model
+python3 main.py --type WGAN # Retraining
 ```  
 
 ## cGAN  
@@ -52,8 +52,8 @@ python main.py --type WGAN # Retraining
 <div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/cgan.png" /></div>  
 
 ```shell
-python main.py --type CGAN --no-train --model weights/CGAN.h5 # Running pretrained model
-python main.py --type CGAN # Retraining
+python3 main.py --type CGAN --no-train --model weights/CGAN.h5 # Running pretrained model
+python3 main.py --type CGAN # Retraining
 ```  
 
 ## InfoGAN  
@@ -64,6 +64,6 @@ The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architectu
 <div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/infogan.png" /></div>  
 
 ```shell
-python main.py --type InfoGAN --no-train --model weights/InfoGAN.h5 # Running pretrained model
-python main.py --type InfoGAN # Retraining
+python3 main.py --type InfoGAN --no-train --model weights/InfoGAN_D.h5 # Running pretrained model
+python3 main.py --type InfoGAN # Retraining
 ```   
