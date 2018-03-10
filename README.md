@@ -61,7 +61,8 @@ The motivation behind the [InfoGAN](https://arxiv.org/abs/1606.03657) architectu
 - Feed c in G through an additional input layer
 - Create an auxiliary head Q that shares some of its weights with D, and train it to maximize the mutual information I(c, G(z,c))   
 
-**TODO** -> Add picture + explanations  
+<div align="center"><img src ="https://github.com/germain-hug/GANs/raw/master/results/infogan.png" /></div>  
+
 ```shell
 python main.py --type InfoGAN --no-train --model weights/InfoGAN.h5 # Running pretrained model
 python main.py --type InfoGAN # Retraining
