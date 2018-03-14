@@ -4,7 +4,7 @@ Keras implementation of:
 - [Deep Convolutional GAN](https://arxiv.org/abs/1511.06434)  
 - [Wasserstein GAN](https://arxiv.org/abs/1701.07875)  
 - [Conditional GAN](https://arxiv.org/abs/1411.1784)  
-- [InfoGAN](https://arxiv.org/abs/1606.03657) **In progress**
+- [InfoGAN](https://arxiv.org/abs/1606.03657)
 
 The DCGAN code was inspired by Jeremy Howard's [course](http://course.fast.ai/)  
 
